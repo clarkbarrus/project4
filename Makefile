@@ -4,6 +4,9 @@ FLAGS = -Wall
 
 all:$(EXECUTABLES)
 
+ztouch: vdisk.o ztouch.o oufs_lib_support_files.o
+	$(CC) $(FLAGS) vdisk.o zinspect.o oufs_lib_support.o -o zinspect
+
 zinspect: vdisk.o zinspect.o oufs_lib_support.o
 	$(CC) $(FLAGS) vdisk.o zinspect.o oufs_lib_support.o -o zinspect
 
@@ -18,6 +21,9 @@ zformat: zformat.o vdisk.o oufs_lib_support.o
 
 zfilez: zfilez.o vdisk.o oufs_lib_support.o
 	$(CC) $(FLAGS) zfilez.o vdisk.o oufs_lib_support.o -o zfilez
+
+ztouch.o: ztouch.c
+	$(CC) $(FLAGS) -c ztouch.c -o ztouch.o
 
 zinspect.o: zinspect.c
 	$(CC) $(FLAGS) -c zinspect.c -o zinspect.o
@@ -36,6 +42,9 @@ zrmdir.o: zrmdir.c
 
 oufs_lib_support.o: oufs_lib_support.c
 	$(CC) $(FLAGS) -c oufs_lib_support.c -o oufs_lib_support.o
+
+oufs_lib_support_files.0: oufs_lib_support_files.c
+	$(CC) $(FLAGS) -c oufs_lib_support_files.c -o oufs_lib_support.o
 
 vdisk.o:  vdisk.c
 	$(CC) $(FLAGS) -c vdisk.c -o vdisk.o
