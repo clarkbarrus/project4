@@ -1,0 +1,35 @@
+Title: Project 3
+Name: Clark Barrus
+Email: clark.barrus@ou.edu
+Date: 8 November 2018
+Description:
+This project implements a files system on a file representing a virtual disk.
+This file system can be interacted with using a set of system calls.
+zformat - Format a new disk for the oufs file system
+zfilez - List all files in a directory in the OU file system
+zmkdir - Make a directory in the OU File System
+zrmdir - Remove a directory in the OU File System
+zinspect - Lists info about the oufs files system. Different commands are as follows
+
+-master
+	Displays information about block allocation table and inode allocation table
+
+-inode #
+	Displays information about inode number # including type, block pointers, size
+
+-inodee #
+	Extended inode query
+
+-dblock #
+	Displays information about block number # as though it is a directory
+
+-raw #
+	Displays raw hex information about block number #
+
+No known bugs. Assumed that if ZCWD is changed that it is changed to a valid absolute directory path
+
+References: including online resources and individuals that you communicated with
+https://oudalab.github.io/cs3113fa18/projects/project1
+http://man7.org/
+I worked with Matthew Oakley to develop an understanding of the project and
+to develop approaches to the project assignment.

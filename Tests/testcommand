@@ -1,0 +1,11 @@
+./zformat
+./zmkdir foo
+./zmkdir foo/bar
+./zmkdir foo/baz
+./zrmdir foo
+./zmkdir foo/bar/boo
+./zrmdir foo/bar/../baz
+./zrmdir foo/bar/boo
+./zrmdir foo/bar
+./zrmdir foo
+./zrmdir /
