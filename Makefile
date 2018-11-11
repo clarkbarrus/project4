@@ -1,5 +1,5 @@
 CC = gcc
-EXECUTABLES = zinspect zformat zmkdir zrmdir zfilez
+EXECUTABLES = zinspect zformat zmkdir zrmdir zfilez ztouch
 FLAGS = -Wall
 
 all:$(EXECUTABLES)
