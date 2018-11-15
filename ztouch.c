@@ -2,7 +2,6 @@
 Make a file in the oufs file system
 
 CS3113
-
 */
 
 #include <stdio.h>
