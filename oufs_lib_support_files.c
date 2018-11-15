@@ -60,7 +60,7 @@ OUFILE* oufs_fopen(char *cwd, char *path, char *mode)
       }
     }
     OUFILE *fp = malloc(sizeof(OUFILE));
-    fp->inode_reference = child
+    fp->inode_reference = child;
     fp->mode = 'r';
     fp->offset = 0;
     return fp;
@@ -219,5 +219,5 @@ OUFILE* oufs_fopen(char *cwd, char *path, char *mode)
    *
    */
 void oufs_fclose(OUFILE *fp);
-  free(fp);
+  free((void)fp);
 }
