@@ -49,7 +49,7 @@ OUFILE* oufs_fopen(char *cwd, char *path, char *mode)
   if (!strcmp(mode, "r"))
   {
     if(debug)
-    fprintf(stderr, "##Entered "r" mode for fopen\n");
+    fprintf(stderr, "##Entered \"r\" mode for fopen\n");
 
     INODE inode;
 
