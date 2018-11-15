@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "oufs_lib.h"
 
-#define debug 0
+#define debug 1
 
 //TODO List:
 //OUFILE* oufs_fopen(char *cwd, char *path, char *mode);
@@ -48,6 +48,9 @@ OUFILE* oufs_fopen(char *cwd, char *path, char *mode)
   //case "r"
   if (!strcmp(mode, "r"))
   {
+    if(debug)
+    fprintf(stderr, "##Entered "r" mode for fopen\n");
+
     INODE inode;
 
     if (child == UNALLOCATED_INODE) {
