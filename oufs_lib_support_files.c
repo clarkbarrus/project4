@@ -52,10 +52,17 @@ OUFILE* oufs_fopen(char *cwd, char *path, char *mode)
       fprintf(stderr, "File doesn't exist, can't open for reading\n");
       return NULL;
     }
+    else {
+      oufs_read_inode_by_reference(child, &inode);
+      if (inode.type != IT_FILE) { //Not a file! Exit!
+        fprintf(stderr, "Path doesn't point to a file");
+        return NULL;
+      }
+    }
     OUFILE *fp = malloc(sizeof(OUFILE));
-    fp -> inode_ref = child
-    fp -> mode = 'r';
-    fp -> offset = 0;
+    fp->inode_reference = child
+    fp->mode = 'r';
+    fp->offset = 0;
     return fp;
   }
 
@@ -94,10 +101,10 @@ OUFILE* oufs_fopen(char *cwd, char *path, char *mode)
       int i;
       for (i = 0; i < DIRECTORY_ENTRIES_PER_BLOCK; i++)
       {
-        if (strcmp(block.directory.entry[i].name, "") == 0) {//If entry is empty, write in, and break from for loop
-          strcpy(block.directory.entry[i].name, local_name);
-          block.directory.entry[i].inode_reference = child;
-          vdisk_write_block(inode.data[0], &block);
+        if (strcmp(d_block.directory.entry[i].name, "") == 0) {//If entry is empty, write in, and break from for loop
+          strcpy(d_block.directory.entry[i].name, local_name);
+          d_block.directory.entry[i].inode_reference = child;
+          vdisk_write_block(inode.data[0], &d_block);
           break;
         }
       }
@@ -120,8 +127,8 @@ OUFILE* oufs_fopen(char *cwd, char *path, char *mode)
     }
 
     OUFILE *fp = malloc(sizeof(OUFILE));
-    fp -> inode_ref = child;
-    fp-> mode = 'a';
+    fp->inode_reference = child;
+    fp->mode = 'a';
     fp->offset = inode.size;
     return fp;
   }
@@ -162,10 +169,10 @@ OUFILE* oufs_fopen(char *cwd, char *path, char *mode)
       int i;
       for (i = 0; i < DIRECTORY_ENTRIES_PER_BLOCK; i++)
       {
-        if (strcmp(block.directory.entry[i].name, "") == 0) {//If entry is empty, write in, and break from for loop
-          strcpy(block.directory.entry[i].name, local_name);
-          block.directory.entry[i].inode_reference = child;
-          vdisk_write_block(inode.data[0], &block);
+        if (strcmp(d_block.directory.entry[i].name, "") == 0) {//If entry is empty, write in, and break from for loop
+          strcpy(d_block.directory.entry[i].name, local_name);
+          d_block.directory.entry[i].inode_reference = child;
+          vdisk_write_block(inode.data[0], &d_block);
           break;
         }
       }
@@ -199,7 +206,7 @@ OUFILE* oufs_fopen(char *cwd, char *path, char *mode)
     }
 
     OUFILE *fp = malloc(sizeof(OUFILE));
-    fp -> inode_ref = child;
+    fp->inode_reference = child;
     fp->mode = 'w';
     fp->offset = 0;
     return fp;
