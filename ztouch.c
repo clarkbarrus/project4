@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 
   }else{
     // Wrong number of parameters
-    fprintf(stderr, "Usage: touch <filename>\n");
+    fprintf(stderr, "Usage: ztouch <filename>\n");
   }
 
 }
