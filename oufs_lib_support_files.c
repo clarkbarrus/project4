@@ -46,7 +46,7 @@ OUFILE* oufs_fopen(char *cwd, char *path, char *mode)
 
 
   //case "r"
-  if (strcmp(mode, "r"))
+  if (!strcmp(mode, "r"))
   {
     INODE inode;
 
@@ -69,7 +69,7 @@ OUFILE* oufs_fopen(char *cwd, char *path, char *mode)
   }
 
   //case "a"
-  if (strcmp(mode, "a")) {
+  if (!strcmp(mode, "a")) {
     //check parent exists
     if (parent == UNALLOCATED_INODE) {
       fprintf(stderr, "Parent doesn't exist, invalid path\n");
@@ -136,7 +136,7 @@ OUFILE* oufs_fopen(char *cwd, char *path, char *mode)
   }
 
   //case "w"
-  if (strcmp(mode, "w")) {
+  if (!strcmp(mode, "w")) {
     //Check parent exists
     if (parent == UNALLOCATED_INODE) {
       fprintf(stderr, "Parent doesn't exist, invalid path\n");
