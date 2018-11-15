@@ -48,6 +48,8 @@ OUFILE* oufs_fopen(char *cwd, char *path, char *mode)
   //case "r"
   if (strcmp(mode, "r"))
   {
+    INODE inode;
+
     if (child == UNALLOCATED_INODE) {
       fprintf(stderr, "File doesn't exist, can't open for reading\n");
       return NULL;
@@ -218,6 +220,7 @@ OUFILE* oufs_fopen(char *cwd, char *path, char *mode)
    * @param OUFILE * fp File pointer to be closed
    *
    */
-void oufs_fclose(OUFILE *fp);
-  free((void)fp);
+void oufs_fclose(OUFILE *fp)
+{
+  free(fp);
 }
