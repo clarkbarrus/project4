@@ -214,6 +214,9 @@ OUFILE* oufs_fopen(char *cwd, char *path, char *mode)
     return fp;
   }
 
+  fprintf(stderr, "Incorrect fopen call, no mode\n");
+  return NULL;
+}
   /**
    * Closes a file pointer
    *
