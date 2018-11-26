@@ -240,12 +240,12 @@ void oufs_fclose(OUFILE *fp)
  */
 int oufs_fwrite(OUFILE *fp, unsigned char * buf, int len) {
   if (fp == NULL) {
-    fprintf(stderr, "Invalid file pointer\n")
+    fprintf(stderr, "Invalid file pointer\n");
     return -1;
   }
 
   if (!(fp->mode == 'a' || fp->mode == 'w')) {
-    fprintf(stderr, "Invalid file pointer mode\n")
+    fprintf(stderr, "Invalid file pointer mode\n");
     return -1;
   }
 
@@ -268,7 +268,7 @@ int oufs_fwrite(OUFILE *fp, unsigned char * buf, int len) {
   BLOCK_REFERENCE block_reference;
 
   if (debug) { //Debugging info about variables
-    fprintf(stderr, "##(Before loop)Writing to block data[%d] == %d at offset %d, %d bytes.\n##From buffer at offset %d. We have written %d so far.\n", block_index, inode[block_index], block_offset, copy_amount, buffer_offset, write_count);
+    fprintf(stderr, "##(Before loop)Writing to block data[%d] == %d at offset %d, %d bytes.\n##From buffer at offset %d. We have written %d so far.\n", block_index, inode.data[block_index], block_offset, copy_amount, buffer_offset, write_count);
   }
 
   //Continue while there is still data that should/can be copied
@@ -297,7 +297,7 @@ int oufs_fwrite(OUFILE *fp, unsigned char * buf, int len) {
     }
 
     if (debug) { //Debugging info about variables
-      fprintf(stderr, "##(In loop)Writing to block data[%d] == %d at offset %d, %d bytes.\n##From buffer at offset %d. We have written %d so far.\n", block_index, inode[block_index], block_offset, copy_amount, buffer_offset, write_count);
+      fprintf(stderr, "##(In loop)Writing to block data[%d] == %d at offset %d, %d bytes.\n##From buffer at offset %d. We have written %d so far.\n", block_index, inode.data[block_index], block_offset, copy_amount, buffer_offset, write_count);
     }
 
     //Get block for writing
@@ -320,7 +320,7 @@ int oufs_fwrite(OUFILE *fp, unsigned char * buf, int len) {
   }
 
   if (debug) { //Debugging info about variables
-    fprintf(stderr, "##(Out of loop)Writing to block data[%d] == %d at offset %d, %d bytes.\n##From buffer at offset %d. We have written %d so far.\n", block_index, inode[block_index], block_offset, copy_amount, buffer_offset, write_count);
+    fprintf(stderr, "##(Out of loop)Writing to block data[%d] == %d at offset %d, %d bytes.\n##From buffer at offset %d. We have written %d so far.\n", block_index, inode.data[block_index], block_offset, copy_amount, buffer_offset, write_count);
   }
 
   //Set inode size ot be num bytes written plus size of inode
