@@ -244,20 +244,20 @@ int oufs_fwrite(OUFILE *fp, unsigned char * buf, int len) {
     return -1;
   }
 
-  if (!(fp.mode == 'a' || fp.mode == 'w')) {
+  if (!(fp->mode == 'a' || fp->mode == 'w')) {
     fprintf(stderr, "Invalid file pointer mode\n")
     return -1;
   }
 
   INODE inode;
-  oufs_read_inode_by_reference(fp.inode_reference, &inode);
+  oufs_read_inode_by_reference(fp->inode_reference, &inode);
 
   //Set up variables for file copy
 
   //Index of block that we are writing to
-  int block_index = fp.offset / BLOCK_SIZE;
+  int block_index = fp->offset / BLOCK_SIZE;
   //Offset inside of the block that we are writing to
-  int block_offset = fp.offset % BLOCK_SIZE;
+  int block_offset = fp->offset % BLOCK_SIZE;
   //Offset inside the buffer we are writing from
   int buffer_offset = 0;
   //Amount that has been written so far
@@ -325,7 +325,7 @@ int oufs_fwrite(OUFILE *fp, unsigned char * buf, int len) {
 
   //Set inode size ot be num bytes written plus size of inode
   inode.size = inode.size + write_count;
-  oufs_write_inode_by_reference(fp.inode_reference, &inode);
+  oufs_write_inode_by_reference(fp->inode_reference, &inode);
 
   //Return num bytes written
   return write_count;
