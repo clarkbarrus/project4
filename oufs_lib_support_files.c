@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "oufs_lib.h"
 
-#define debug 1
+#define debug 0
 static int BUFFER_SIZE = BLOCK_SIZE;
 //TODO List:
 //int oufs_remove(char *cwd, char *path);
@@ -480,10 +480,6 @@ int oufs_fread(OUFILE *fp, unsigned char * buf, int len) {
   //Continue while there is still data that should/can be copied
   while (read_amount > 0) {
 
-    if (block_index >= BLOCKS_PER_INODE) {
-      //Out of blocks to read from.
-      break;
-    }
     block_reference = inode.data[block_index];
 
     if (debug) { //Debugging info about variables
