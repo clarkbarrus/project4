@@ -375,7 +375,7 @@ int oufs_fwrite(OUFILE *fp, unsigned char * buf, int len) {
     vdisk_read_block(block_reference, &block);
 
     //Write from block_offset to either end of block or end of buf
-    for (int i = block_offset; i < copy_amount; i++) {
+    for (int i = block_offset; i < (block_offset + copy_amount); i++) {
       block.data.data[i] = buf[i + buffer_offset];
     }
 
