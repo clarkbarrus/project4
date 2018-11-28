@@ -109,15 +109,16 @@ int oufs_more(char *cwd, char *path) {
   char buf[BUFFER_SIZE + 1];
   int ret = oufs_fread(fp, buf, BUFFER_SIZE);
   buf[ret] = '\0';
-  fprintf(stdout, buf);
+  fprintf(stdout, "%s", buf);
 
   while (ret != 0) {
-    fp->offset = fp->offset + len; //Update offset after read of first 256 bytes
+    fp->offset = fp->offset + ret; //Update offset after read of first 256 bytes
     ret = oufs_fread(fp, buf, BUFFER_SIZE);
     buf[ret] = '\0';
-    fprintf(stdout, buf);
+    fprintf(stdout, "%s", buf);
   }
 
+  fpringf(stdout, "\n");
   oufs_fclose(fp);
   return 0;
 }
@@ -496,7 +497,7 @@ int oufs_fread(OUFILE *fp, unsigned char * buf, int len) {
     //Update write_count, block_offset, buffer_offset, block_index, copy_amount
     block_index++;
     block_offset = 0;
-    buffer_offset = buffer_offset + copy_amount;
+    buffer_offset = buffer_offset + read_amount;
     read_count = read_count + read_amount;
     //Amount that should be copied from the current file block
     read_amount = MIN(BLOCK_SIZE, len - buffer_offset);
