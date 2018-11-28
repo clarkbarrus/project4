@@ -468,7 +468,7 @@ int oufs_fread(OUFILE *fp, unsigned char * buf, int len) {
   //Amount that should be copied from the current file block
   //Minimized between, block size, remainder of buffer, and remainder of file
   int read_amount = MIN(BLOCK_SIZE - block_offset, len - buffer_offset);
-  read_amount = MIN(read_amount, inode.size - (block_index * BLOCK_SIZE) - block_offset);
+  read_amount = MIN(read_amount, inode.size - fp->offset);
 
   BLOCK block;
   BLOCK_REFERENCE block_reference;
