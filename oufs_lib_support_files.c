@@ -34,7 +34,7 @@ int oufs_create(char *cwd, char *path) {
   int ret = 0;
   while (len != 0) {
     if (debug) {
-      fprintf(stderr, "##Calling fwrite on input lenght %d\n", len);
+      fprintf(stderr, "##Calling fwrite on input length %d\n", len);
     }
 
     ret = oufs_fwrite(fp, buf, len);
@@ -299,7 +299,7 @@ int oufs_fwrite(OUFILE *fp, unsigned char * buf, int len) {
   }
 
   //Continue while there is still data that should/can be copied
-  while (copy_amount < 0) {
+  while (copy_amount > 0) {
 
     //Check if block is already allocated, allocate new one if not
     if (block_index >= BLOCKS_PER_INODE) { //File full, no more data blocks
