@@ -7,7 +7,7 @@ all:$(EXECUTABLES)
 ztouch: vdisk.o ztouch.o oufs_lib_support_files.o
 	$(CC) $(FLAGS) vdisk.o ztouch.o oufs_lib_support_files.o oufs_lib_support.o -o ztouch
 
-ztouch: vdisk.o zcreate.o oufs_lib_support_files.o
+zcreate: vdisk.o zcreate.o oufs_lib_support_files.o
 	$(CC) $(FLAGS) vdisk.o zcreate.o oufs_lib_support_files.o oufs_lib_support.o -o zcreate
 
 zinspect: vdisk.o zinspect.o oufs_lib_support.o
