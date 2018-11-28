@@ -1,5 +1,5 @@
 CC = gcc
-EXECUTABLES = zinspect zformat zmkdir zrmdir zfilez ztouch zcreate
+EXECUTABLES = zinspect zformat zmkdir zrmdir zfilez ztouch zcreate zappend
 FLAGS = -Wall
 
 all:$(EXECUTABLES)
@@ -9,6 +9,9 @@ ztouch: vdisk.o ztouch.o oufs_lib_support_files.o
 
 zcreate: vdisk.o zcreate.o oufs_lib_support_files.o
 	$(CC) $(FLAGS) vdisk.o zcreate.o oufs_lib_support_files.o oufs_lib_support.o -o zcreate
+
+zappend: vdisk.o zappend.o oufs_lib_support_files.o
+	$(CC) $(FLAGS) vdisk.o zappend.o oufs_lib_support_files.o oufs_lib_support.o -o zappend
 
 zinspect: vdisk.o zinspect.o oufs_lib_support.o
 	$(CC) $(FLAGS) vdisk.o zinspect.o oufs_lib_support.o -o zinspect
@@ -30,6 +33,9 @@ ztouch.o: ztouch.c
 
 zcreate.o: zcreate.c
 	$(CC) $(FLAGS) -c zcreate.c -o zcreate.o
+
+zappend.o: zappend.c
+	$(CC) $(FLAGS) -c zappend.c -o zappend.o
 
 zinspect.o: zinspect.c
 	$(CC) $(FLAGS) -c zinspect.c -o zinspect.o

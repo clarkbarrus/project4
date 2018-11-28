@@ -38,6 +38,7 @@ int oufs_fread(OUFILE *fp, unsigned char * buf, int len);
 int oufs_remove(char *cwd, char *path);
 int oufs_touch(char *cwd, char *path);
 int oufs_create(char *cwd, char *path);
+int oufs_append(char *cwd, char *path);
 int oufs_link(char *cwd, char *path_src, char *path_dst);
 
 #endif

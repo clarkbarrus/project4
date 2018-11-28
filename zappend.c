@@ -21,14 +21,14 @@ int main(int argc, char** argv) {
     vdisk_disk_open(disk_name);
 
     // Make the specified directory
-    oufs_create(cwd, argv[1]);
+    oufs_append(cwd, argv[1]);
 
     // Clean up
     vdisk_disk_close();
 
   }else{
     // Wrong number of parameters
-    fprintf(stderr, "Usage: zcreate <filename>\n");
+    fprintf(stderr, "Usage: zappend <filename>\n");
   }
 
 }

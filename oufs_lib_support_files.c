@@ -23,8 +23,51 @@ int oufs_touch(char *cwd, char *path) {
   return 0;
 }
 
+/**
+ * Create a new file from stdin
+ *
+ * @param char * cwd Current working directory of OUFS
+ * @param char * path Path of the new directory to be made, null will list info about cwd
+ * @return 0 if successful, negative for failure
+ *
+ */
 int oufs_create(char *cwd, char *path) {
   OUFILE *fp = oufs_fopen(cwd, path, "w");
+  if (fp == NULL)
+    return -1;
+
+  //Read from stdin into a buffer, and fwrite to disk until fwrite stops or EOF
+  char buf[BUFFER_SIZE];
+  int len = fread(buf, 1, BUFFER_SIZE, stdin);
+  int ret = 0;
+  while (len != 0) {
+    if (debug) {
+      fprintf(stderr, "##Calling fwrite on input length %d\n", len);
+    }
+
+    ret = oufs_fwrite(fp, buf, len);
+    if (ret != len) { //File isn't writing anymore
+      break;
+    }
+
+    fp->offset = fp->offset + ret;
+    len = fread(buf, 1, BLOCK_SIZE, stdin);
+  }
+
+  oufs_fclose(fp);
+  return 0;
+}
+
+/**
+ * Append to a file from stdin
+ *
+ * @param char * cwd Current working directory of OUFS
+ * @param char * path Path of the new directory to be made, null will list info about cwd
+ * @return 0 if successful, negative for failure
+ *
+ */
+int oufs_append(char *cwd, char *path) {
+  OUFILE *fp = oufs_fopen(cwd, path, "a");
   if (fp == NULL)
     return -1;
 
