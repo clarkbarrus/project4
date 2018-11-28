@@ -118,7 +118,7 @@ int oufs_more(char *cwd, char *path) {
     fprintf(stdout, "%s", buf);
   }
 
-  fpringf(stdout, "\n");
+  fprintf(stdout, "\n");
   oufs_fclose(fp);
   return 0;
 }
