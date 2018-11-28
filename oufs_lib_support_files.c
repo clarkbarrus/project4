@@ -42,7 +42,7 @@ int oufs_create(char *cwd, char *path) {
       break;
     }
 
-    fp.offset = fp.offset + ret;
+    fp->offset = fp->offset + ret;
     len = fread(buf, 1, BLOCK_SIZE, stdin);
   }
 
