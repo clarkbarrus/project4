@@ -3,7 +3,7 @@
 #include "oufs_lib.h"
 
 #define debug 1
-
+static int BUFFER_SIZE = BLOCK_SIZE;
 //TODO List:
 //int oufs_fread(OUFILE *fp, unsigned char * buf, int len);
 //int oufs_remove(char *cwd, char *path);
@@ -29,8 +29,8 @@ int oufs_create(char *cwd, char *path) {
     return -1;
 
   //Read from stdin into a buffer, and fwrite to disk until fwrite stops or EOF
-  char buf[BLOCK_SIZE];
-  int len = fread(buf, 1, BLOCK_SIZE, stdin);
+  char buf[BUFFER_SIZE];
+  int len = fread(buf, 1, BUFFER_SIZE, stdin);
   int ret = 0;
   while (len != 0) {
     if (debug) {
@@ -42,6 +42,7 @@ int oufs_create(char *cwd, char *path) {
       break;
     }
 
+    fp.offset = fp.offset + ret;
     len = fread(buf, 1, BLOCK_SIZE, stdin);
   }
 
