@@ -5,7 +5,7 @@
  *
  * CS 3113
  *
- * 
+ *
  */
 
 // Only evaluate these definitions once, even if included multiple times
@@ -135,7 +135,7 @@ typedef struct directory_block_s
 
 /**********************************************************************/
 // All-encompassing structure for a disk block
-// The union says that all 4 of these elements occupy overlapping bytes in 
+// The union says that all 4 of these elements occupy overlapping bytes in
 //  memory (hence, a block will only be one of these 4 at any given time)
 typedef union block_u
 {
