@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "oufs_lib.h"
 
 #define debug 1
@@ -18,6 +19,32 @@
  */
 int oufs_touch(char *cwd, char *path) {
   OUFILE *fp = oufs_fopen(cwd, path, "a");
+  oufs_fclose(fp);
+  return 0;
+}
+
+int oufs_create(char *cwd, char *path) {
+  OUFILE *fp = oufs_fopen(cwd, path, "w");
+  if (fp == NULL)
+    return -1;
+
+  //Read from stdin into a buffer, and fwrite to disk until fwrite stops or EOF
+  char buf[BLOCK_SIZE];
+  int len = fread(buf, 1, BLOCK_SIZE, stdin);
+  int ret = 0;
+  while (len != 0) {
+    if (debug) {
+      fprintf(stderr, "##Calling fwrite on input lenght %d\n", len);
+    }
+
+    ret = oufs_fwrite(fp, buf, len);
+    if (ret != len) { //File isn't writing anymore
+      break;
+    }
+
+    len = fread(buf, 1, BLOCK_SIZE, stdin);
+  }
+
   oufs_fclose(fp);
   return 0;
 }
