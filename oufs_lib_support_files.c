@@ -480,6 +480,10 @@ int oufs_fread(OUFILE *fp, unsigned char * buf, int len) {
   //Continue while there is still data that should/can be copied
   while (read_amount > 0) {
 
+    if (block_index >= BLOCKS_PER_INODE) {
+      //Out of blocks to read from.
+      break;
+    }
     block_reference = inode.data[block_index];
 
     if (debug) { //Debugging info about variables
