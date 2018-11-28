@@ -13,6 +13,9 @@ zcreate: vdisk.o zcreate.o oufs_lib_support_files.o
 zappend: vdisk.o zappend.o oufs_lib_support_files.o
 	$(CC) $(FLAGS) vdisk.o zappend.o oufs_lib_support_files.o oufs_lib_support.o -o zappend
 
+zmore: vdisk.o zmore.o oufs_lib_support_files.o
+	$(CC) $(FLAGS) vdisk.o zmore.o oufs_lib_support_files.o oufs_lib_support.o -o zmore
+
 zinspect: vdisk.o zinspect.o oufs_lib_support.o
 	$(CC) $(FLAGS) vdisk.o zinspect.o oufs_lib_support.o -o zinspect
 
@@ -36,6 +39,9 @@ zcreate.o: zcreate.c
 
 zappend.o: zappend.c
 	$(CC) $(FLAGS) -c zappend.c -o zappend.o
+
+zmore.o: zmore.c
+	$(CC) $(FLAGS) -c zmore.c -o zmore.o
 
 zinspect.o: zinspect.c
 	$(CC) $(FLAGS) -c zinspect.c -o zinspect.o

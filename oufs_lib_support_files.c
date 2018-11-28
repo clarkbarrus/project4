@@ -5,7 +5,6 @@
 #define debug 1
 static int BUFFER_SIZE = BLOCK_SIZE;
 //TODO List:
-//int oufs_fread(OUFILE *fp, unsigned char * buf, int len);
 //int oufs_remove(char *cwd, char *path);
 //int oufs_link(char *cwd, char *path_src, char *path_dst);
 
@@ -87,6 +86,36 @@ int oufs_append(char *cwd, char *path) {
 
     fp->offset = fp->offset + ret;
     len = fread(buf, 1, BLOCK_SIZE, stdin);
+  }
+
+  oufs_fclose(fp);
+  return 0;
+}
+
+/**
+ * Read a file to stdout
+ *
+ * @param char * cwd Current working directory of OUFS
+ * @param char * path Path of the new directory to be made, null will list info about cwd
+ * @return 0 if successful, negative for failure
+ *
+ */
+int oufs_more(char *cwd, char *path) {
+  OUFILE *fp = oufs_fopen(cwd, path, "r");
+  if (fp == NULL)
+    return -1;
+
+  //Use a buffer to read from the file, stop when file is empty
+  char buf[BUFFER_SIZE + 1];
+  int ret = oufs_fread(fp, buf, BUFFER_SIZE);
+  buf[ret] = '\0';
+  fprintf(stdout, buf);
+
+  while (ret != 0) {
+    fp->offset = fp->offset + len; //Update offset after read of first 256 bytes
+    ret = oufs_fread(fp, buf, BUFFER_SIZE);
+    buf[ret] = '\0';
+    fprintf(stdout, buf);
   }
 
   oufs_fclose(fp);
@@ -400,4 +429,84 @@ int oufs_fwrite(OUFILE *fp, unsigned char * buf, int len) {
 
   //Return num bytes written
   return write_count;
+}
+
+/**
+ * Writes from a buffer to a file
+ *
+ * @param OUFILE *fp file pointer for file of interest
+ * @param unsigned char *buf Buffer containing contents to be written to file
+ * @param int len size of buf
+ * @return int Number of bytes written to file, -1 if error
+ *
+ */
+int oufs_fread(OUFILE *fp, unsigned char * buf, int len) {
+  if (fp == NULL) {
+    fprintf(stderr, "Invalid file pointer\n");
+    return -1;
+  }
+
+  if (!(fp->mode == 'r')) {
+    fprintf(stderr, "Invalid file pointer mode\n");
+    return -1;
+  }
+
+  INODE inode;
+  oufs_read_inode_by_reference(fp->inode_reference, &inode);
+
+  //Set up variables for file read
+
+  //Index of block that we are writing to
+  int block_index = fp->offset / BLOCK_SIZE;
+  //Offset inside of the block that we are writing to
+  int block_offset = fp->offset % BLOCK_SIZE;
+  //Offset inside the buffer we are writing from
+  int buffer_offset = 0;
+  //Amount that has been written so far
+  int read_count = 0;
+  //Amount that should be copied from the current file block
+  //Minimized between, block size, remainder of buffer, and remainder of file
+  int read_amount = MIN(BLOCK_SIZE - block_offset, len - buffer_offset);
+  read_amount = MIN(read_amount, inode.size - (block_index * BLOCK_SIZE) - block_offset);
+
+  BLOCK block;
+  BLOCK_REFERENCE block_reference;
+
+  if (debug) { //Debugging info about variables
+    fprintf(stderr, "##(Before loop)Reading from block data[%d] == %d at offset %d, %d bytes.\n##From buffer at offset %d. We have read %d so far.\n", block_index, inode.data[block_index], block_offset, read_amount, buffer_offset, read_count);
+  }
+
+  //Continue while there is still data that should/can be copied
+  while (read_amount > 0) {
+
+    block_reference = inode.data[block_index];
+
+    if (debug) { //Debugging info about variables
+      fprintf(stderr, "##(In loop)Reading from block data[%d] == %d at offset %d, %d bytes.\n##From buffer at offset %d. We have written %d so far.\n", block_index, inode.data[block_index], block_offset, read_amount, buffer_offset, read_count);
+    }
+
+    //Get block for reading
+    vdisk_read_block(block_reference, &block);
+
+    //Read from block_offset to either end of block or end of buf
+    for (int i = block_offset; i < (block_offset + read_amount); i++) {
+      buf[i + buffer_offset] = block.data.data[i];
+    }
+
+    //Update write_count, block_offset, buffer_offset, block_index, copy_amount
+    block_index++;
+    block_offset = 0;
+    buffer_offset = buffer_offset + copy_amount;
+    read_count = read_count + read_amount;
+    //Amount that should be copied from the current file block
+    read_amount = MIN(BLOCK_SIZE, len - buffer_offset);
+    read_amount = MIN(read_amount, inode.size - (block_index * BLOCK_SIZE) - block_offset);
+  }
+
+  if (debug) { //Debugging info about variables
+    fprintf(stderr, "##(Out of loop)Writing to block data[%d] == %d at offset %d, %d bytes.\n##From buffer at offset %d. We have written %d so far.\n", block_index, inode.data[block_index], block_offset, read_amount, buffer_offset, read_count);
+  }
+
+  //Return num bytes written
+  return read_count;
 }
