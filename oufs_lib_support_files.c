@@ -316,9 +316,9 @@ int oufs_fwrite(OUFILE *fp, unsigned char * buf, int len) {
         if (debug) {
           fprintf(stderr, "##No more blocks in file system, ending fwrite\n");
         }
-        inode.data[block_index] = block_reference;
         break;
       }
+      inode.data[block_index] = block_reference;
     }
     else {
       block_reference = inode.data[block_index];
