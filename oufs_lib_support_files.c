@@ -477,7 +477,7 @@ int oufs_fread(OUFILE *fp, unsigned char * buf, int len) {
   read_amount = MIN(read_amount, inode.size - fp->offset);
 
   if (debug) {
-    fprintf(stderr, "Calculating read_amount: min(BLOCK_SIZE - block_offset: %d, len - buffer_offset: %d, inode.size - fp->offset: %d\n)", BLOCK_SIZE - block_offset, len - buffer_offset, inode.size - fp->offset);
+    fprintf(stderr, "##Calculating read_amount: min(BLOCK_SIZE - block_offset: %d, len - buffer_offset: %d, inode.size - fp->offset: %d\n)", BLOCK_SIZE - block_offset, len - buffer_offset, inode.size - fp->offset);
   }
 
   BLOCK block;
