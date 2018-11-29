@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "oufs_lib.h"
 
-#define debug 1
+#define debug 0
 static int BUFFER_SIZE = BLOCK_SIZE;
 //TODO List:
 //int oufs_remove(char *cwd, char *path);
