@@ -477,7 +477,7 @@ int oufs_fread(OUFILE *fp, unsigned char * buf, int len) {
   read_amount = MIN(read_amount, inode.size - fp->offset);
 
   if (debug) {
-    fprintf(stderr, "Calculating read_amount: min(BLOCK_SIZE - block_offset: %d, len - buffer_offset: %d, inode.size - fp->offset: %d)", BLOCK_SIZE - block_offset, len - buffer_offset, inode.size - fp->offset);
+    fprintf(stderr, "Calculating read_amount: min(BLOCK_SIZE - block_offset: %d, len - buffer_offset: %d, inode.size - fp->offset: %d\n)", BLOCK_SIZE - block_offset, len - buffer_offset, inode.size - fp->offset);
   }
 
   BLOCK block;
@@ -511,11 +511,11 @@ int oufs_fread(OUFILE *fp, unsigned char * buf, int len) {
     read_count = read_count + read_amount;
     //Amount that should be copied from the current file block
     read_amount = MIN(BLOCK_SIZE, len - buffer_offset);
-    read_amount = MIN(read_amount, inode.size - (block_index * BLOCK_SIZE) - block_offset);
+    read_amount = MIN(read_amount, (inode.size - fp->offset);
   }
 
   if (debug) { //Debugging info about variables
-    fprintf(stderr, "##(Out of loop)Writing to block data[%d] == %d at offset %d, %d bytes.\n##From buffer at offset %d. We have written %d so far.\n", block_index, inode.data[block_index], block_offset, read_amount, buffer_offset, read_count);
+    fprintf(stderr, "##(Out of loop)Reading from block data[%d] == %d at offset %d, %d bytes.\n##From buffer at offset %d. We have written %d so far.\n", block_index, inode.data[block_index], block_offset, read_amount, buffer_offset, read_count);
   }
 
   //Return num bytes written
