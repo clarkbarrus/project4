@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "oufs_lib.h"
 
-#define debug 0
+#define debug 1
 static int BUFFER_SIZE = BLOCK_SIZE;
 //TODO List:
 //int oufs_remove(char *cwd, char *path);
@@ -318,6 +318,7 @@ OUFILE* oufs_fopen(char *cwd, char *path, char *mode)
   fprintf(stderr, "Incorrect fopen call, no mode\n");
   return NULL;
 }
+
   /**
    * Closes a file pointer
    *
@@ -442,6 +443,11 @@ int oufs_fwrite(OUFILE *fp, unsigned char * buf, int len) {
  *
  */
 int oufs_fread(OUFILE *fp, unsigned char * buf, int len) {
+
+  if (debug) {
+    fprintf(stderr, "fread called, with fp->size %d, fp->offset %d, fp->inode_reference %d.\n", fp->size, fp->offset, fp->inode_reference);
+  }
+
   if (fp == NULL) {
     fprintf(stderr, "Invalid file pointer\n");
     return -1;
@@ -469,6 +475,10 @@ int oufs_fread(OUFILE *fp, unsigned char * buf, int len) {
   //Minimized between, block size, remainder of buffer, and remainder of file
   int read_amount = MIN(BLOCK_SIZE - block_offset, len - buffer_offset);
   read_amount = MIN(read_amount, inode.size - fp->offset);
+
+  if (debug) {
+    fprintf(stderr, "Calculating read_amount: min(BLOCK_SIZE - block_offset: %d, len - buffer_offset: %d, inode.size - fp->offset: %d)", BLOCK_SIZE - block_offset, len - buffer_offset, inode.size - fp->offset);
+  }
 
   BLOCK block;
   BLOCK_REFERENCE block_reference;
