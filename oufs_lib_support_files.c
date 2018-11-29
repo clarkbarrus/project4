@@ -445,7 +445,7 @@ int oufs_fwrite(OUFILE *fp, unsigned char * buf, int len) {
 int oufs_fread(OUFILE *fp, unsigned char * buf, int len) {
 
   if (debug) {
-    fprintf(stderr, "fread called, with fp->size %d, fp->offset %d, fp->inode_reference %d.\n", fp->size, fp->offset, fp->inode_reference);
+    fprintf(stderr, "fread called, fp->offset %d, fp->inode_reference %d.\n", fp->offset, fp->inode_reference);
   }
 
   if (fp == NULL) {
