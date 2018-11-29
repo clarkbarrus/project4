@@ -599,4 +599,75 @@ int oufs_remove(char *cwd, char *path) {
  *
  * @return int 0 on success, -1 if error
  */
- //int oufs_link(char *cwd, char *path_src, char *path_dst);
+int oufs_link(char *cwd, char *path_src, char *path_dst) {
+
+  INODE_REFERENCE parent_src;
+  INODE_REFERENCE child_src;
+  char local_name_src[MAX_PATH_LENGTH];
+  if (0 > oufs_find_file(cwd, path, &parent_src, &child_src, local_name_src)) {
+    return -1;
+  }
+
+  if(child_src == UNALLOCATED_INODE) {
+    fprintf(stderr, "File %s does not exist, can't link to file \n", local_name_src);
+    return -1;
+  }
+
+  INODE_REFERENCE parent_dst;
+  INODE_REFERENCE child_dst;
+  char local_name_dst[MAX_PATH_LENGTH];
+  if (0 > oufs_find_file(cwd, path, &parent_dst, &child_dst, local_name_dst)) {
+    return -1;
+  }
+
+  if(child_dst != UNALLOCATED_INODE) {
+    fprintf(stderr, "Destination file %s already exists, can't link to file. \n", local_name_dst);
+    return -1;
+  }
+
+  if(parent_dst == UNALLOCATED_INODE) {
+    fprintf(stderr, "Destination file parent doesn't exist, can't link to file. \n");
+    return -1;
+  }
+
+  INODE inode;
+
+  oufs_read_inode_by_reference(child_src, &inode);
+
+  if(inode.type != IT_FILE) {
+    fprintf(stderr, "Source %s is not a file, can't link to file. \n", local_name_src);
+    return -1;
+  }
+
+  oufs_read_inode_by_reference(parent_dst, &inode);
+
+  inode.size = inode.size + 1;
+  if (inode.size > DIRECTORY_ENTRIES_PER_BLOCK) {
+    fprintf(stderr, "Parent directory for src file is full. \n");
+    return -1;
+  }
+  oufs_write_inode_by_reference(parent_dst, &inode);
+
+  //Update parent_src inode, and directory
+  BLOCK block;
+  vdisk_read_block(inode.data[0], &block);
+
+  //Put in entry in first availible entry space
+  int i;
+  for (i = 0; i < DIRECTORY_ENTRIES_PER_BLOCK; i++)
+  {
+    if (strcmp(block.directory.entry[i].name, "") == 0) {//If entry is empty, write in, and break from for loop
+      strcpy(block.directory.entry[i].name, local_name_dst);
+      block.directory.entry[i].inode_reference = child_src;
+      vdisk_write_block(inode.data[0], &block);
+      break;
+    }
+  }
+
+  //Update child inode n_references
+  oufs_read_inode_by_reference(child_src, &inode);
+  inode.n_references = inode.n_references + 1;
+  oufs_write_inode_by_reference(child_src, &inode);
+
+  return 0;
+}
