@@ -61,7 +61,7 @@ zrmdir.o: zrmdir.c
 oufs_lib_support.o: oufs_lib_support.c
 	$(CC) $(FLAGS) -c oufs_lib_support.c -o oufs_lib_support.o
 
-oufs_lib_support_files.0: oufs_lib_support_files.c
+oufs_lib_support_files.o: oufs_lib_support_files.c
 	$(CC) $(FLAGS) -c oufs_lib_support_files.c -o oufs_lib_support.o
 
 vdisk.o:  vdisk.c
