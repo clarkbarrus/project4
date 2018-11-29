@@ -550,6 +550,12 @@ int oufs_remove(char *cwd, char *path) {
   //Decrement n_references, and delete inode if n_references is 0
   if (inode.n_references == 0) {
     //Delete Inode, and deallocate data blocks
+    for (int i = 0; i < BLOCKS_PER_INODE; i++) {
+      if (inode.data[i] != UNALLOCATED_BLOCK) {
+        oufs_deallocate_old_block(inode.data[i]);
+      }
+    }
+
     oufs_clean_inode(&inode);
     oufs_write_inode_by_reference(child, &inode);
     oufs_deallocate_old_inode(child);
