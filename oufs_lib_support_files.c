@@ -4,9 +4,6 @@
 
 #define debug 0
 static int BUFFER_SIZE = BLOCK_SIZE;
-//TODO List:
-//int oufs_remove(char *cwd, char *path);
-//int oufs_link(char *cwd, char *path_src, char *path_dst);
 
 /**
  * Create a new file
@@ -36,7 +33,7 @@ int oufs_create(char *cwd, char *path) {
     return -1;
 
   //Read from stdin into a buffer, and fwrite to disk until fwrite stops or EOF
-  char buf[BUFFER_SIZE];
+  unsigned char buf[BUFFER_SIZE];
   int len = fread(buf, 1, BUFFER_SIZE, stdin);
   int ret = 0;
   while (len != 0) {
@@ -71,7 +68,7 @@ int oufs_append(char *cwd, char *path) {
     return -1;
 
   //Read from stdin into a buffer, and fwrite to disk until fwrite stops or EOF
-  char buf[BUFFER_SIZE];
+  unsigned char buf[BUFFER_SIZE];
   int len = fread(buf, 1, BUFFER_SIZE, stdin);
   int ret = 0;
   while (len != 0) {
@@ -106,7 +103,7 @@ int oufs_more(char *cwd, char *path) {
     return -1;
 
   //Use a buffer to read from the file, stop when file is empty
-  char buf[BUFFER_SIZE + 1];
+  unsigned char buf[BUFFER_SIZE + 1];
   int ret = oufs_fread(fp, buf, BUFFER_SIZE);
   buf[ret] = '\0';
   fprintf(stdout, "%s", buf);
@@ -132,12 +129,11 @@ int oufs_more(char *cwd, char *path) {
  * @return OUFILE * pointing to OUFILE struct if successful, NULL on failure
  *
  */
-OUFILE* oufs_fopen(char *cwd, char *path, char *mode)
-{
+OUFILE* oufs_fopen(char *cwd, char *path, char *mode) {
 
   INODE_REFERENCE child;
   INODE_REFERENCE parent;
-  char local_name[FILE_NAME_SIZE];
+  unsigned char local_name[FILE_NAME_SIZE];
 
   if (oufs_find_file(cwd, path, &parent, &child, local_name) != 0)
     return NULL;
@@ -319,17 +315,15 @@ OUFILE* oufs_fopen(char *cwd, char *path, char *mode)
   return NULL;
 }
 
-  /**
+/**
    * Closes a file pointer
    *
    * @param OUFILE * fp File pointer to be closed
    *
    */
-void oufs_fclose(OUFILE *fp)
-{
+void oufs_fclose(OUFILE *fp) {
   free(fp);
 }
-
 
 /**
  * Writes from a buffer to a file
@@ -521,3 +515,82 @@ int oufs_fread(OUFILE *fp, unsigned char * buf, int len) {
   //Return num bytes written
   return read_count;
 }
+
+/**
+ * Removes specified file
+ *
+ * @param char *cwd Current working directory
+ * @param char *path Path to the file of interest
+ *
+ * @return int 0 on success, -1 if error
+ */
+int oufs_remove(char *cwd, char *path) {
+  INODE_REFERENCE parent;
+  INODE_REFERENCE child;
+  unsigned char local_name[MAX_PATH_LENGTH];
+  if (0 > oufs_find_file(cwd, path, &parent, &child, local_name)) {
+    return -1;
+  }
+
+  if(child == UNALLOCATED_INODE) {
+    fprintf(stderr, "File does not exist, can't remove \n");
+    return -1;
+  }
+
+  INODE inode;
+  BLOCK block;
+  oufs_read_inode_by_reference(child, &inode);
+
+  if(inode.type != IT_FILE) {
+    fprintf(stderr, "File does is not a file, can't remove \n");
+    return -1;
+  }
+
+  inode.n_references--;
+  //Decrement n_references, and delete inode if n_references is 0
+  if (inode.n_references == 0) {
+    //Delete Inode, and deallocate data blocks
+    oufs_clean_inode(&inode);
+    oufs_write_inode_by_reference(child, &inode);
+    oufs_deallocate_old_inode(child);
+  }
+  else { //Update n_references in inode
+    oufs_write_inode_by_reference(child, &inode);
+  }
+
+  //Delete d_entry from parent
+
+
+  //Update parent directory (clear entry and inode pointer)
+  //and inode (decrement size)
+
+  //Update parent inode
+  oufs_read_inode_by_reference(parent, &inode);
+  inode.size = inode.size - 1;
+  oufs_write_inode_by_reference(parent, &inode);
+
+  //Update parent directory block
+  vdisk_read_block(inode.data[0], &block);
+  //Remove directory entry for removed file
+  int i;
+  for (i = 0; i < DIRECTORY_ENTRIES_PER_BLOCK; i++)
+  {
+    if (strcmp(block.directory.entry[i].name, local_name) == 0) {//If entry is the removed file, overwrite entry, and break from for loop
+      oufs_clean_directory_entry(&(block.directory.entry[i]));
+      vdisk_write_block(inode.data[0], &block);
+      break;
+    }
+  }
+
+  return 0;
+}
+
+/**
+ * Links an existing file to a new file
+ *
+ * @param char *cwd Current working directory
+ * @param char *path Path to the file of interest
+ *
+ * @return int 0 on success, -1 if error
+ */
+ //int oufs_link(char *cwd, char *path_src, char *path_dst);

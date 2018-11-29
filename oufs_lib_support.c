@@ -609,7 +609,7 @@ int oufs_rmdir(char *cwd, char *path)
 	oufs_deallocate_old_inode(child);
 
 
-	//Update pazrent directory (clear entry and inode pointer)
+	//Update parent directory (clear entry and inode pointer)
 	// and inode (decrement size)
 
 	//Update parent inode
