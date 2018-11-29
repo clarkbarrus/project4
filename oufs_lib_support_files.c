@@ -604,7 +604,7 @@ int oufs_link(char *cwd, char *path_src, char *path_dst) {
   INODE_REFERENCE parent_src;
   INODE_REFERENCE child_src;
   char local_name_src[MAX_PATH_LENGTH];
-  if (0 > oufs_find_file(cwd, path, &parent_src, &child_src, local_name_src)) {
+  if (0 > oufs_find_file(cwd, path_src, &parent_src, &child_src, local_name_src)) {
     return -1;
   }
 
@@ -616,7 +616,7 @@ int oufs_link(char *cwd, char *path_src, char *path_dst) {
   INODE_REFERENCE parent_dst;
   INODE_REFERENCE child_dst;
   char local_name_dst[MAX_PATH_LENGTH];
-  if (0 > oufs_find_file(cwd, path, &parent_dst, &child_dst, local_name_dst)) {
+  if (0 > oufs_find_file(cwd, path_dst, &parent_dst, &child_dst, local_name_dst)) {
     return -1;
   }
 
