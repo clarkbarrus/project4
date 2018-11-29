@@ -133,7 +133,7 @@ OUFILE* oufs_fopen(char *cwd, char *path, char *mode) {
 
   INODE_REFERENCE child;
   INODE_REFERENCE parent;
-  unsigned char local_name[FILE_NAME_SIZE];
+  char local_name[FILE_NAME_SIZE];
 
   if (oufs_find_file(cwd, path, &parent, &child, local_name) != 0)
     return NULL;
@@ -527,7 +527,7 @@ int oufs_fread(OUFILE *fp, unsigned char * buf, int len) {
 int oufs_remove(char *cwd, char *path) {
   INODE_REFERENCE parent;
   INODE_REFERENCE child;
-  unsigned char local_name[MAX_PATH_LENGTH];
+  char local_name[MAX_PATH_LENGTH];
   if (0 > oufs_find_file(cwd, path, &parent, &child, local_name)) {
     return -1;
   }
