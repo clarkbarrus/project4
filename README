@@ -1,7 +1,7 @@
-Title: Project 3
+Title: Project 4
 Name: Clark Barrus
 Email: clark.barrus@ou.edu
-Date: 8 November 2018
+Date: 29 November 2018
 Description:
 This project implements a files system on a file representing a virtual disk.
 This file system can be interacted with using a set of system calls.
@@ -25,6 +25,13 @@ zinspect - Lists info about the oufs files system. Different commands are as fol
 
 -raw #
 	Displays raw hex information about block number #
+
+zappend - Adds to the end of a file
+zcreate - Creates a new file
+zmore - Reads a file out to stdout
+zremove - Removes a file from the file system
+ztouch - Creates a file, or makes sure that one exists
+zlink - Link a new file to a preexisting file
 
 No known bugs. Assumed that if ZCWD is changed that it is changed to a valid absolute directory path
 
